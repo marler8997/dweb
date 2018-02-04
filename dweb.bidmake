@@ -1,0 +1,57 @@
+import git;
+import dlang;
+
+let mored git.repo
+{
+    url "https://github.com/marler8997/mored";
+}
+include path(mored.dir, "more.bidmake");
+
+dlang.compile "dwebmain"
+{
+    targetType exe;
+    //dependency mored.more;
+    includePath mored.dir;
+    source "dwebmain.d";
+    source "dweb/types.d";
+    source "dweb/log.d";
+    source "dweb/util.d";
+    source "dweb/net.d";
+    source "dweb/http.d";
+    source "dweb/httpserver.d";
+    source "dweb/forwarder.d";
+
+    define dirpath serverThreadPath path(os, "epoll");
+    //define dirpath serverThreadPath "select";
+    // TODO: make it an option to select different implementations
+    //       such as epoll, select etc.
+    // if linux
+    // {
+    //     // first option is the default
+    //     option "epoll"
+    //     {
+    //         define dirpath serverThreadPath path(os, "epoll");
+    //     }
+    //     option "select"
+    //     {
+    //         define dirpath serverThreadPath "select";
+    //     }
+    // }
+    // if windows
+    // {
+    //     option "select"
+    //     {
+    //         define dirpath serverThreadPath "select";
+    //     }
+    // }
+    includePath serverThreadPath;
+    source path(serverThreadPath, "dweb/serverthread.d");
+
+    //source path(mored.dir, "more/types.d");
+    //source path(mored.dir, "more/format.d");
+    //source path(mored.dir, "more/parse.d");
+    //source path(mored.dir, "more/utf8.d");
+    //source path(mored.dir, "more/net.d");
+    //source path(mored.dir, "more/uri.d");
+    //source path(mored.dir, "more/httpparser.d");
+}
